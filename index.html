@@ -3,87 +3,148 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Mon Atelier</title>
+  <meta name="theme-color" content="#101828">
+  <title>Mon Atelier — Espace créatif</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>Mon Atelier</h1>
-    <nav>
-      <button class="tab active" data-page="tasks">Tâches</button>
-      <button class="tab" data-page="editor">Éditeur d’affiches</button>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Mon Atelier, accueil">
+      <span class="brand-mark">M</span>
+      <span>mon atelier</span>
+    </a>
+
+    <nav class="main-nav" aria-label="Navigation principale">
+      <button class="nav-button active" data-page="editor">Studio</button>
+      <button class="nav-button" data-page="tasks">Mes tâches</button>
     </nav>
+
+    <div class="topbar-right">
+      <span class="save-status"><i></i> Enregistré sur cet appareil</span>
+      <button class="button button-dark" id="top-export">Exporter</button>
+    </div>
   </header>
 
   <main>
-    <section id="tasks" class="page">
-      <h2>Mes tâches</h2>
-      <form id="task-form">
-        <input id="task-title" placeholder="Nom de la tâche" required>
-        <input id="task-date" type="date" aria-label="Échéance">
-        <select id="task-priority" aria-label="Priorité">
-          <option value="Normale">Normale</option>
-          <option value="Haute">Haute</option>
-          <option value="Basse">Basse</option>
-        </select>
-        <button>Ajouter</button>
-      </form>
-      <div class="toolbar">
-        <button data-filter="all">Toutes</button>
-        <button data-filter="todo">À faire</button>
-        <button data-filter="done">Terminées</button>
+    <section id="editor" class="page">
+      <div class="page-heading">
+        <div>
+          <div class="eyebrow">ESPACE CRÉATIF</div>
+          <h1>Studio d’affiche</h1>
+          <p>Composez, ajustez et exportez votre création.</p>
+        </div>
+        <button class="button button-quiet" id="reset-demo">Réinitialiser la démo</button>
       </div>
-      <ul id="task-list"></ul>
-    </section>
 
-    <section id="editor" class="page hidden">
-      <h2>Éditeur d’affiches</h2>
-      <p class="notice">
-        Une affiche importée est une image de référence : ses éléments ne deviennent
-        pas automatiquement des calques séparés. Reconstruisez-les en ajoutant des calques.
+      <div class="editor-toolbar">
+        <div class="tool-group">
+          <button class="button button-light" id="add-text"><span>＋</span> Texte</button>
+          <button class="button button-light" id="add-rect"><span>▰</span> Rectangle</button>
+          <button class="button button-light" id="add-circle"><span>◯</span> Cercle</button>
+          <label class="button button-light file-button">
+            <span>↑</span> Importer une image
+            <input id="image-file" type="file" accept="image/*">
+          </label>
+        </div>
+        <div class="tool-group">
+          <button class="button button-quiet" id="undo" title="Annuler">↶</button>
+          <button class="button button-quiet" id="redo" title="Rétablir">↷</button>
+          <button class="button button-dark" id="export-png">Exporter PNG</button>
+        </div>
+      </div>
+
+      <p class="info-banner">
+        <span>i</span>
+        Une affiche importée sert de référence : ses éléments ne deviennent pas automatiquement
+        des calques séparés. Vous pouvez les reconstruire avec les outils ci-dessus.
       </p>
 
-      <div class="toolbar">
-        <button id="new-text">Ajouter texte</button>
-        <button id="new-rect">Rectangle</button>
-        <button id="new-circle">Cercle</button>
-        <label class="file-button">Importer une image
-          <input id="image-input" type="file" accept="image/*">
-        </label>
-        <label>Fond <input id="background-color" type="color" value="#ffffff"></label>
-        <button id="delete-layer">Supprimer le calque</button>
-      </div>
+      <div class="studio-layout">
+        <section class="canvas-panel" aria-label="Zone de création">
+          <div class="canvas-header">
+            <div>
+              <span class="live-dot"></span>
+              <span>ZONE DE TRAVAIL</span>
+            </div>
+            <div class="canvas-meta">
+              <label>Fond <input id="background-color" type="color" value="#f4f0e9"></label>
+              <span>800 × 600 px</span>
+            </div>
+          </div>
+          <div class="canvas-stage">
+            <svg id="canvas" xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 800 600" role="img" aria-label="Aperçu de l’affiche"></svg>
+          </div>
+          <div class="canvas-footer">
+            <span>Astuce : sélectionnez un élément, puis faites-le glisser.</span>
+            <span>SVG · 800 × 600</span>
+          </div>
+        </section>
 
-      <div class="workspace">
-        <div class="canvas-area">
-          <svg id="canvas" xmlns="http://www.w3.org/2000/svg"
-               viewBox="0 0 800 600" aria-label="Toile de création"></svg>
-        </div>
+        <aside class="side-panel">
+          <div class="side-section">
+            <div class="section-title">
+              <h2>Calques</h2>
+              <span id="layer-count" class="count-badge">0</span>
+            </div>
+            <ul id="layer-list" class="layer-list"></ul>
+            <button class="add-layer-button" id="side-add-text">＋ Ajouter un calque texte</button>
+          </div>
 
-        <aside>
-          <h3>Calques</h3>
-          <ul id="layers"></ul>
-          <h3>Propriétés</h3>
-          <div id="properties">Sélectionnez un calque.</div>
+          <div class="side-section properties-section">
+            <div class="section-title">
+              <h2>Propriétés</h2>
+            </div>
+            <div id="properties" class="properties">
+              <div class="empty-state">Sélectionnez un calque pour modifier ses propriétés.</div>
+            </div>
+          </div>
+
+          <div class="side-section export-section">
+            <h2>Exporter le projet</h2>
+            <button class="export-row" id="export-svg">Télécharger en SVG <span>↗</span></button>
+            <button class="export-row" id="export-json">Sauvegarder le projet JSON <span>↗</span></button>
+            <label class="export-row import-row">Importer un projet JSON <span>↑</span>
+              <input id="json-file" type="file" accept=".json,application/json">
+            </label>
+            <button class="export-row" id="export-jsx">Script Photoshop JSX <span>↗</span></button>
+            <p class="small-note">Le script Photoshop recrée les textes et formes simples. Les images et certains effets devront être ajustés séparément.</p>
+          </div>
         </aside>
       </div>
+    </section>
 
-      <div class="toolbar">
-        <button id="save-json">Exporter JSON</button>
-        <label class="file-button">Importer JSON
-          <input id="json-input" type="file" accept=".json,application/json">
-        </label>
-        <button id="export-svg">Exporter SVG</button>
-        <button id="export-png">Exporter PNG</button>
-        <button id="export-jsx">Script Photoshop JSX</button>
+    <section id="tasks" class="page hidden">
+      <div class="page-heading">
+        <div>
+          <div class="eyebrow">ORGANISATION PERSONNELLE</div>
+          <h1>Mes tâches</h1>
+          <p>Gardez vos idées et vos projets sous la main.</p>
+        </div>
       </div>
-      <p class="notice">
-        Le JSX exporte les textes et formes simples. Les images importées et certains effets
-        devront être recréés manuellement dans Photoshop.
-      </p>
+
+      <div class="tasks-card">
+        <form id="task-form" class="task-form">
+          <input id="task-title" placeholder="Ex. Préparer une nouvelle affiche…" required>
+          <input id="task-date" type="date" aria-label="Date d’échéance">
+          <select id="task-priority" aria-label="Priorité">
+            <option value="Normale">Priorité normale</option>
+            <option value="Haute">Priorité haute</option>
+            <option value="Basse">Priorité basse</option>
+          </select>
+          <button class="button button-dark">Ajouter une tâche</button>
+        </form>
+        <div class="task-filters">
+          <button class="filter-button active" data-filter="all">Toutes</button>
+          <button class="filter-button" data-filter="todo">À faire</button>
+          <button class="filter-button" data-filter="done">Terminées</button>
+        </div>
+        <ul id="task-list" class="task-list"></ul>
+      </div>
     </section>
   </main>
 
+  <footer>MON ATELIER <span>•</span> Vos projets sont enregistrés dans ce navigateur.</footer>
   <script src="app.js"></script>
 </body>
 </html>
