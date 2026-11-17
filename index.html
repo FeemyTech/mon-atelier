@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mon Atelier</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Mon Atelier</h1>
+    <nav>
+      <button class="tab active" data-page="tasks">Tâches</button>
+      <button class="tab" data-page="editor">Éditeur d’affiches</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="tasks" class="page">
+      <h2>Mes tâches</h2>
+      <form id="task-form">
+        <input id="task-title" placeholder="Nom de la tâche" required>
+        <input id="task-date" type="date" aria-label="Échéance">
+        <select id="task-priority" aria-label="Priorité">
+          <option value="Normale">Normale</option>
+          <option value="Haute">Haute</option>
+          <option value="Basse">Basse</option>
+        </select>
+        <button>Ajouter</button>
+      </form>
+      <div class="toolbar">
+        <button data-filter="all">Toutes</button>
+        <button data-filter="todo">À faire</button>
+        <button data-filter="done">Terminées</button>
+      </div>
+      <ul id="task-list"></ul>
+    </section>
+
+    <section id="editor" class="page hidden">
+      <h2>Éditeur d’affiches</h2>
+      <p class="notice">
+        Une affiche importée est une image de référence : ses éléments ne deviennent
+        pas automatiquement des calques séparés. Reconstruisez-les en ajoutant des calques.
+      </p>
+
+      <div class="toolbar">
+        <button id="new-text">Ajouter texte</button>
+        <button id="new-rect">Rectangle</button>
+        <button id="new-circle">Cercle</button>
+        <label class="file-button">Importer une image
+          <input id="image-input" type="file" accept="image/*">
+        </label>
+        <label>Fond <input id="background-color" type="color" value="#ffffff"></label>
+        <button id="delete-layer">Supprimer le calque</button>
+      </div>
+
+      <div class="workspace">
+        <div class="canvas-area">
+          <svg id="canvas" xmlns="http://www.w3.org/2000/svg"
+               viewBox="0 0 800 600" aria-label="Toile de création"></svg>
+        </div>
+
+        <aside>
+          <h3>Calques</h3>
+          <ul id="layers"></ul>
+          <h3>Propriétés</h3>
+          <div id="properties">Sélectionnez un calque.</div>
+        </aside>
+      </div>
+
+      <div class="toolbar">
+        <button id="save-json">Exporter JSON</button>
+        <label class="file-button">Importer JSON
+          <input id="json-input" type="file" accept=".json,application/json">
+        </label>
+        <button id="export-svg">Exporter SVG</button>
+        <button id="export-png">Exporter PNG</button>
+        <button id="export-jsx">Script Photoshop JSX</button>
+      </div>
+      <p class="notice">
+        Le JSX exporte les textes et formes simples. Les images importées et certains effets
+        devront être recréés manuellement dans Photoshop.
+      </p>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
